@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class Options {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Long id;
     private Integer index;
     private String option;

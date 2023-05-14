@@ -1,16 +1,12 @@
 package com.heliversetask.Controller;
 
 import com.heliversetask.Payloads.ApiResponse;
-import com.heliversetask.Payloads.OptionsDto;
 import com.heliversetask.Payloads.QuizDto;
 import com.heliversetask.Service.QuizService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.Date;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
@@ -30,8 +26,15 @@ public class QuizController {
         return ResponseEntity.status(OK).body(this.quizService.createNewQuiz(quizDto));
     }
 
+    //Get all active quizzes
     @GetMapping("/active")
     ResponseEntity<?> getAllActiveQuiz() {
         return ResponseEntity.status(OK).body(this.quizService.getActiveQuizzes());
+    }
+
+    //Get the quiz result if
+    @GetMapping("/{quizId}/result")
+    ResponseEntity<?> getQuizResult(@PathVariable("quizId") Long quizId){
+        return this.quizService.getQuizResult(quizId);
     }
 }

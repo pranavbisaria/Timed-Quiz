@@ -1,29 +1,23 @@
-package com.heliversetask.Models;
+package com.heliversetask.Payloads;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import com.heliversetask.Models.Options;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Quiz {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class QuizResultDto {
     private Long id;
     private String question;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Options> options;
     private Integer rightAnswer;
+    private Options rightOption;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
-    private String status;
 }

@@ -14,6 +14,6 @@ public interface QuizRepo extends JpaRepository<Quiz, Long> {
     @Query("SELECT q FROM Quiz q WHERE q.status <> 'finished' AND (q.startDate <= :now OR q.endDate <= :now)")
     List<Quiz> findAllQuizzesToUpdateStatus(@Param("now") LocalDateTime now);
 
-    @Query("SELECT q FROM Quiz q WHERE (q.startDate <= :now AND q.endDate >= :now)")
+    @Query("SELECT q FROM Quiz q WHERE (q.startDate <= :now AND q.endDate >= :now And q.status = 'active')")
     List<Quiz> findAllActiveQuizzes(@Param("now") LocalDateTime now);
 }
