@@ -31,7 +31,9 @@ public class QuizServiceImpl implements QuizService {
     public Quiz createNewQuiz(QuizDto quizDto){
         Quiz quiz = this.modelMapper.map(quizDto, Quiz.class);
         quiz.setStatus("inactive");
+        quiz.setQuestion(quiz.getQuestion().trim());
         for (Options option : quiz.getOptions()) {
+            option.setOption(option.getOption().trim());
             option.setQuiz(quiz);
         }
         this.quizRepo.save(quiz);

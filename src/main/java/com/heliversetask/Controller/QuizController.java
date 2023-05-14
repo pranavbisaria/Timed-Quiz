@@ -6,7 +6,6 @@ import com.heliversetask.Service.QuizService;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +23,9 @@ public class QuizController {
     ResponseEntity<?> createQuiz(@Valid @RequestBody QuizDto quizDto){
         if (quizDto.getStartDate().compareTo(quizDto.getEndDate()) > 0) {
             return ResponseEntity.status(BAD_REQUEST).body(new ApiResponse("Start date must not be greater than end date!!", false));
+        }
+        if (!(0< quizDto.getRightAnswer()) || !(quizDto.getRightAnswer()<= quizDto.getOptions().size())) {
+            return ResponseEntity.status(BAD_REQUEST).body(new ApiResponse("Please select a valid answer index!!", false));
         }
         return ResponseEntity.status(OK).body(this.quizService.createNewQuiz(quizDto));
     }
