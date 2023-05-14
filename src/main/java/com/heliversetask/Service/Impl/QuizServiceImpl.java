@@ -3,6 +3,7 @@ package com.heliversetask.Service.Impl;
 import com.heliversetask.Models.Options;
 import com.heliversetask.Models.Quiz;
 import com.heliversetask.Payloads.QuizDto;
+import com.heliversetask.Payloads.ShowQuizDto;
 import com.heliversetask.Repository.QuizRepo;
 import com.heliversetask.Service.QuizService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,15 @@ public class QuizServiceImpl implements QuizService {
         this.quizRepo.save(quiz);
         return quiz;
     }
+
+    @Override
+    public List<ShowQuizDto> getActiveQuizzes(){
+        LocalDateTime now = LocalDateTime.now();
+        List<Quiz> allActiveQuiz = this.quizRepo.findAllActiveQuizzes(now);
+        return allActiveQuiz.stream().map((activeQuiz)-> this.modelMapper.map(activeQuiz, ShowQuizDto.class)).toList();
+    }
+
+    // ------------------------------------------- Scheduler -----------------------------------------------------
 
     //This run every minute
     @Scheduled(cron = "0 * * * * *")
