@@ -16,13 +16,17 @@ import java.util.List;
 @NoArgsConstructor
 public class ShowQuizDto {
     private Long id;
+
     private String question;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Options> options;
-    private Integer rightAnswer;
+    private List<ShowOptionDto> options;
+
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
+
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
+
     private String status;
 }

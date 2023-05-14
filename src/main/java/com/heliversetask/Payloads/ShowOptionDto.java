@@ -1,6 +1,5 @@
 package com.heliversetask.Payloads;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OptionsDto {
-    @NotBlank(message = "Options can not be blank")
+public class ShowOptionDto {
+    private Integer index;
     private String option;
 }

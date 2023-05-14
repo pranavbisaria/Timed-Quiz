@@ -32,9 +32,15 @@ public class QuizController {
         return ResponseEntity.status(OK).body(this.quizService.getActiveQuizzes());
     }
 
-    //Get the quiz result if
+    //Get the quiz result if quiz ended
     @GetMapping("/{quizId}/result")
     ResponseEntity<?> getQuizResult(@PathVariable("quizId") Long quizId){
         return this.quizService.getQuizResult(quizId);
+    }
+
+    //Get all the quiz
+    @GetMapping("/all")
+    ResponseEntity<?> getAllQuizzes(){
+        return ResponseEntity.status(OK).body(this.quizService.getAllQuizzes());
     }
 }

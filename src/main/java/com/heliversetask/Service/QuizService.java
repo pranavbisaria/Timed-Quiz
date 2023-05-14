@@ -12,4 +12,6 @@ public interface QuizService {
     List<ShowQuizDto> getActiveQuizzes();
 
     ResponseEntity<?> getQuizResult(Long quizId);
+
+    List<ShowQuizDto> getAllQuizzes();
 }

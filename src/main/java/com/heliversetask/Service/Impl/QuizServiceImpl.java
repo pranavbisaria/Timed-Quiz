@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +24,7 @@ public class QuizServiceImpl implements QuizService {
     private final QuizRepo quizRepo;
     private final ModelMapper modelMapper;
 
+    //Service Logic for create a quiz API
     @Override
     public Quiz createNewQuiz(QuizDto quizDto){
         Quiz quiz = this.modelMapper.map(quizDto, Quiz.class);
@@ -36,6 +36,7 @@ public class QuizServiceImpl implements QuizService {
         return quiz;
     }
 
+    //Service Logic to get the active quizzes
     @Override
     public List<ShowQuizDto> getActiveQuizzes(){
         LocalDateTime now = LocalDateTime.now();
@@ -45,11 +46,13 @@ public class QuizServiceImpl implements QuizService {
                 .toList();
     }
 
+    //Service Logic to get the result of the quiz if finished
     @Override
     public ResponseEntity<?> getQuizResult(Long quizId){
         Quiz quiz = this.quizRepo.findById(quizId)
                 .orElseThrow(()-> new ResourceNotFoundException("Quiz", "quizId: ", quizId));
         LocalDateTime now = LocalDateTime.now();
+        //Checking if the quiz is finished or not
         if (now.isBefore(quiz.getEndDate().plusMinutes(5))) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("Quiz result is not yet declared.!!", false));
         }
@@ -65,22 +68,13 @@ public class QuizServiceImpl implements QuizService {
         );
     }
 
-    // ------------------------------------------- Scheduler -----------------------------------------------------
-
-    //This run every minute
-    @Scheduled(cron = "0 * * * * *")
-    public void updateQuizStatus() {
-        LocalDateTime now = LocalDateTime.now();
-        List<Quiz> quizzesToUpdate = this.quizRepo.findAllQuizzesToUpdateStatus(now);
-        for (Quiz quiz : quizzesToUpdate) {
-            if (quiz.getStartDate().isAfter(now)) {
-                quiz.setStatus("inactive");
-            } else if (quiz.getEndDate().isBefore(now)) {
-                quiz.setStatus("finished");
-            } else {
-                quiz.setStatus("active");
-            }
-            this.quizRepo.saveAndFlush(quiz);
-        }
+    //Service logic to get all the quiz
+    @Override
+    public List<ShowQuizDto> getAllQuizzes(){
+        List<Quiz> allQuiz = this.quizRepo.findAll();
+        return allQuiz
+                .stream()
+                .map((quiz)-> this.modelMapper.map(quiz, ShowQuizDto.class))
+                .toList();
     }
 }
