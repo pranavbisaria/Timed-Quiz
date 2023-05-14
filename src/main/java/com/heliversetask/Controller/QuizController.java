@@ -41,6 +41,7 @@ public class QuizController {
     @GetMapping("/{quizId}/result")
     @RateLimiter(name="default", fallbackMethod = "rateLimiterFallback")
     ResponseEntity<?> getQuizResult(@PathVariable("quizId") Long quizId){
+        System.out.println("\n\n"+quizId);
         return this.quizService.getQuizResult(quizId);
     }
 

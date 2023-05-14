@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -69,18 +70,24 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public ResponseEntity<?> getQuizResult(Long quizId){
         QuizResultDto cachedResult = (QuizResultDto)quizResultCache.getIfPresent(quizId.toString());
-        if (cachedResult != null && cachedResult.getStatus().equals("finished")) {
+        if (cachedResult != null) {
             return ResponseEntity.status(HttpStatus.OK).body(cachedResult);
         }
+        System.out.println("\n\n"+quizId);
 
-        Quiz quiz = this.quizRepo.findById(quizId)
-                .orElseThrow(()-> new ResourceNotFoundException("Quiz", "quizId: ", quizId));
+        Optional<Quiz> optionalQuiz = this.quizRepo.findById(quizId);
+        if(optionalQuiz.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Quiz not found with the entered Quiz Id!!", false));
+        }
+        Quiz quiz = optionalQuiz.get();
+        System.out.println("\n\n"+quizId);
 
         //Checking if the quiz is finished or not
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(quiz.getEndDate().plusMinutes(5))) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("Quiz result is not yet declared.!!", false));
         }
+        System.out.println("\n\n"+quizId);
 
         QuizResultDto quizResult = new QuizResultDto(
                 quiz.getId(),
