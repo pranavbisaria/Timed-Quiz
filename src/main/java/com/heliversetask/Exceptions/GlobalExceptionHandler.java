@@ -1,6 +1,6 @@
 package com.heliversetask.Exceptions;
 
-import com.viney.Viney.Payloads.ApiResponse;
+import com.heliversetask.Payloads.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

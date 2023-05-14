@@ -1,5 +1,6 @@
 package com.heliversetask.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Options {
         }
     }
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
