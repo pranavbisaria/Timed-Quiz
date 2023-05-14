@@ -20,4 +20,5 @@ public class QuizResultDto {
     private LocalDateTime startDate;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
+    private String status;
 }

@@ -1,5 +1,6 @@
 package com.heliversetask.Scheduler;
 
+import com.google.common.cache.Cache;
 import com.heliversetask.Models.Quiz;
 import com.heliversetask.Repository.QuizRepo;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuizStatusScheduler {
     private final QuizRepo quizRepo;
+    private final Cache<String, Object> quizResultCache;
 
     //Cron Scheduler that runs after every 1 minute, to save the computation I have added a query to update only the active quizzes or the past quizzes
     @Scheduled(cron = "0 * * * * *")
@@ -29,5 +31,7 @@ public class QuizStatusScheduler {
             }
             this.quizRepo.saveAndFlush(quiz);
         }
+        if(!quizzesToUpdate.isEmpty())
+            this.quizResultCache.invalidateAll(); // Invalidate the cache since data alteration occurs
     }
 }
