@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,18 +19,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ApiResponse(ex.getMessage(), false), HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> hanadleMethodArgsNotValidException(MethodArgumentNotValidException ex){
-        Map<String, String> resp = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> hanadleMethodArgsNotValidException(MethodArgumentNotValidException ex){
+        Map<String, Object> resp = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError)error).getField();
             String message = error.getDefaultMessage();
             resp.put(fieldName, message);
         });
+        resp.put("success", false);
         return new ResponseEntity<> (resp, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(Apiexception.class)
     public ResponseEntity<ApiResponse> HandleApiException(Apiexception ex){
-        return new ResponseEntity<>(new ApiResponse(ex.getMessage(), true), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleException(Exception ex) {
@@ -37,5 +39,12 @@ public class GlobalExceptionHandler {
         body.put("message", ex.getMessage());
         body.put("success", false);
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNoHandlerFoundException(Exception ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "");
+        body.put("success", false);
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 }
